@@ -11,6 +11,7 @@ class App:
 	def on_execute(self):
 		print('hello python')
 
-if __name__== "__main__":
+
+if __name__ == "__main__":
 	theApp = App()
 	theApp.on_execute()
