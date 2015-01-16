@@ -1,10 +1,15 @@
-#pygame101
+# pygame101
 import pygame
 from pygame.locals import *
 
+
+class Player:
+	pass
+
+
 class App:
 	def on_execute(self):
-		pass
+		print('hello python')
 
 if __name__== "__main__":
 	theApp = App()
