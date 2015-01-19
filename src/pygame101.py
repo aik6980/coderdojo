@@ -2,15 +2,26 @@
 import pygame
 from pygame.locals import *
 
-
-class Player:
-	pass
-
+SCREEN_SIZE = [400, 400]
+SCREEN = None
 
 class App:
-	def on_execute(self):
-		print('hello python')
+	m_active = True
 
+	def on_execute(self):
+		pygame.init()
+		SCREEN = pygame.display.set_mode(SCREEN_SIZE)
+
+		while self.m_active == True:
+			self.handle_input()
+			pygame.display.flip()
+
+		pygame.quit()
+
+	def handle_input(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				self.m_active = False
 
 if __name__ == "__main__":
 	theApp = App()
