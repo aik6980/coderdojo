@@ -1,6 +1,10 @@
 # pygame101
 import pygame
+
 from pygame.locals import *
+from pygame.math import *
+
+import py_physics.py_physics_simulation as physics
 
 SCREEN_SIZE = [400, 400]
 SCREEN = None
@@ -10,7 +14,9 @@ class App:
 
 	def on_execute(self):
 		pygame.init()
-		SCREEN = pygame.display.set_mode(SCREEN_SIZE) #
+		SCREEN = pygame.display.set_mode(SCREEN_SIZE)
+
+		phySimulation = physics.PhySimulation()
 
 		while self.m_active == True:
 			# update input
