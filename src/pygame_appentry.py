@@ -6,39 +6,40 @@ from pygame.math import *
 
 import py_global as glob
 
+
 class BaseApp:
-	m_active = True
+    m_active = True
 
-	def on_execute(self):
-		pygame.init()
-		glob.MAIN_SURFACE = pygame.display.set_mode(glob.SCREEN_SIZE)
+    def on_execute(self):
+        pygame.init()
+        glob.MAIN_SURFACE = pygame.display.set_mode(glob.SCREEN_SIZE)
 
-		self.init()
+        self.init()
 
-		while self.m_active:
-			# update input
-			self.update()
-			#update logic/simulation
+        while self.m_active:
+            # update input
+            self.update()
+            # update logic/simulation
 
-			#update rendering
-			glob.MAIN_SURFACE.fill((0, 0, 0))
-			self.render()
-			pygame.display.flip()
+            #update rendering
+            glob.MAIN_SURFACE.fill((0, 0, 0))
+            self.render()
+            pygame.display.flip()
 
-		self.destroy()
-		pygame.quit()
+        self.destroy()
+        pygame.quit()
 
-	def init(self):
-		pass
+    def init(self):
+        pass
 
-	def update(self):
-		pass
+    def update(self):
+        pass
 
-	def render(self):
-		pass
+    def render(self):
+        pass
 
-	def destroy(self):
-		pass
+    def destroy(self):
+        pass
 
 
 
