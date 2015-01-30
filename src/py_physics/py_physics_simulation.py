@@ -53,7 +53,15 @@ class PhySimulation:
         self.m_ConstraintCounter += 1
 
     def update(self):
-        pass
+        dt = glob.GAME_CLOCK.get_time()
+
+        for i in range(0, self.m_InstanceCounter):
+            self.m_InstanceBuffer[i].m_acc += Vector2(0, 2)
+            self.step_simulation(self.m_InstanceBuffer[i], dt)
+
+        for i in range(0, self.m_ConstraintCounter):
+            self.step_resolve(self.m_ConstraintBuffer[i])
+
 
     def render(self):
         # draw all phyParticles
@@ -69,16 +77,19 @@ class PhySimulation:
         p.m_pos += p.m_vel * dt
         p.m_vel += p.m_acc * dt
 
-        p.m_acc = 0
+        if p.m_pos.y > 480:
+            p.m_pos.y = 480
+
+        p.m_acc = Vector2(0, 0)
 
     @staticmethod
     def step_resolve(c: PhyConstraint):
         delta_pos = c.m_Particle0.m_pos - c.m_Particle1.m_pos
         force_size = c.m_Target - delta_pos.length()
 
-        dir = delta_pos.normalize()
-        force = dir * force_size
+        force_dir = delta_pos.normalize()
+        force_dir.scale_to_length(force_size)
 
-        c.m_Particle0.m_acc += force
-        c.m_Particle1.m_acc += force * -1.0
+        c.m_Particle0.m_acc += force_dir
+        c.m_Particle1.m_acc += force_dir * -1.0
 
