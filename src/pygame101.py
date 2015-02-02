@@ -15,6 +15,7 @@ class App(BaseApp):
 
         # init scene
         self.init_beam(50, 10, 40, 10)
+        print(glob.PHYSIC_SIMULATION.m_ConstraintBuffer)
         pass
 
     def update(self):
@@ -37,22 +38,17 @@ class App(BaseApp):
             print("Key pressed")
 
     def init_beam(self, x, y, length, segments):
-        top = physics.PhyParticleInstance()
-        bottom = physics.PhyParticleInstance()
-
+        top = physics.PhyParticleInstance(x, y)
+        bottom = physics.PhyParticleInstance(x, y + length)
         top.m_fixed = True
         bottom.m_fixed = True
-        top.m_pos = Vector2(x, y)
-        bottom.m_pos = Vector2(x, y + length)
 
         glob.PHYSIC_SIMULATION.add_instance(top)
         glob.PHYSIC_SIMULATION.add_instance(bottom)
 
         for i in range(1, segments):
-            new_top = physics.PhyParticleInstance()
-            new_bottom = physics.PhyParticleInstance()
-            new_top.m_pos = Vector2(x + i * length, y)
-            new_bottom.m_pos = Vector2(x + i * length, y + length)
+            new_top = physics.PhyParticleInstance(x + i * length, y)
+            new_bottom = physics.PhyParticleInstance(x + i * length, y + length)
 
             c = [physics.PhyConstraint(top, new_top), physics.PhyConstraint(bottom, new_bottom),
                  physics.PhyConstraint(new_top, new_bottom), physics.PhyConstraint(top, new_bottom)]

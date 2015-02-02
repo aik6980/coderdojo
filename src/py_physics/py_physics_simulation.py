@@ -8,10 +8,15 @@ import py_global as glob
 
 class PhyParticleInstance:
     m_pos = Vector2(0, 0)
+    m_prev_pos = Vector2(0, 0)
     m_vel = Vector2(0, 0)
     m_acc = Vector2(0, 0)
 
     m_fixed = False
+
+    def __init__(self, x: float, y: float):
+        self.m_pos = Vector2(x,y)
+        self.m_prev_pos = self.m_pos
 
     def draw(self, surface: pygame.Surface):
         color = [glob.COLOR_WHITE, glob.COLOR_RED][self.m_fixed]
@@ -53,15 +58,17 @@ class PhySimulation:
         self.m_ConstraintCounter += 1
 
     def update(self):
-        dt = glob.GAME_CLOCK.get_time()
+        delta_time = glob.GAME_CLOCK.get_time() * 0.001;
 
-        for i in range(0, self.m_InstanceCounter):
-            self.m_InstanceBuffer[i].m_acc += Vector2(0, 2)
-            self.step_simulation(self.m_InstanceBuffer[i], dt)
+        step = delta_time/1
+        for i in range(0, 1):
 
-        for i in range(0, self.m_ConstraintCounter):
-            self.step_resolve(self.m_ConstraintBuffer[i])
+            for ii in range(0, self.m_InstanceCounter):
+                self.m_InstanceBuffer[ii].m_acc += Vector2(0, 20)
+                self.step_simulation_verlet(self.m_InstanceBuffer[ii], step)
 
+            for ii in range(0, self.m_ConstraintCounter):
+                self.step_resolve(self.m_ConstraintBuffer[ii])
 
     def render(self):
         # draw all phyParticles
@@ -74,22 +81,40 @@ class PhySimulation:
     @staticmethod
     def step_simulation(p: PhyParticleInstance, dt: float):
 
+        if p.m_fixed:
+            p.m_acc = Vector2(0, 0)
+            return
+
         p.m_pos += p.m_vel * dt
         p.m_vel += p.m_acc * dt
-
-        if p.m_pos.y > 480:
-            p.m_pos.y = 480
 
         p.m_acc = Vector2(0, 0)
 
     @staticmethod
+    def step_simulation_verlet(p: PhyParticleInstance, dt: float):
+
+        if p.m_fixed:
+            p.m_acc = Vector2(0, 0)
+            return
+
+        pos = 2.0 * p.m_pos - p.m_prev_pos + p.m_acc * dt * dt
+        p.m_prev_pos = p.m_pos
+        p.m_pos = pos
+
+        p.m_acc = Vector2(0, 0)
+
+
+    @staticmethod
     def step_resolve(c: PhyConstraint):
-        delta_pos = c.m_Particle0.m_pos - c.m_Particle1.m_pos
-        force_size = c.m_Target - delta_pos.length()
+        delta_pos = c.m_Particle1.m_pos - c.m_Particle0.m_pos
+        dist = delta_pos.length()
+        dir = delta_pos.normalize()
 
-        force_dir = delta_pos.normalize()
-        force_dir.scale_to_length(force_size)
+        factor = (dist - c.m_Target) * 0.5
 
-        c.m_Particle0.m_acc += force_dir
-        c.m_Particle1.m_acc += force_dir * -1.0
+        if not c.m_Particle0.m_fixed:
+            c.m_Particle0.m_pos += factor * dir
+        if not c.m_Particle1.m_fixed:
+            c.m_Particle1.m_pos += factor * dir * -1.0
+
 
