@@ -32,9 +32,12 @@ class App(BaseApp):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.m_active = False
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    glob.PHYSIC_SIMULATION.test_collision_instance(Vector2(event.pos))
 
-        pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]:
+        key_pressed = pygame.key.get_pressed()
+        if key_pressed[pygame.K_UP]:
             print("Key pressed")
 
     def init_beam(self, x, y, length, segments):

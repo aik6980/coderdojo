@@ -57,6 +57,28 @@ class PhySimulation:
         self.m_ConstraintBuffer[self.m_ConstraintCounter] = c
         self.m_ConstraintCounter += 1
 
+    def test_collision_instance(self, v: Vector2):
+        threshold = 5
+
+        for i in range(0, self.m_ConstraintCounter):
+            p0 = self.m_ConstraintBuffer[i].m_Particle0
+            p1 = self.m_ConstraintBuffer[i].m_Particle1
+            if (p0.m_pos - v).length() < threshold:
+                self.m_ConstraintCounter = self.remove_instance(self.m_ConstraintBuffer, i, self.m_ConstraintCounter)
+            elif (p1.m_pos - v).length() < threshold:
+                self.m_ConstraintCounter = self.remove_instance(self.m_ConstraintBuffer, i, self.m_ConstraintCounter)
+
+        for i in range(0, self.m_InstanceCounter):
+            p = self.m_InstanceBuffer[i]
+            if (p.m_pos - v).length() < threshold:
+                self.m_InstanceCounter = self.remove_instance(self.m_InstanceBuffer, i, self.m_InstanceCounter)
+
+    @staticmethod
+    def remove_instance(ls: list, remove_id: int, last_id: int):
+        ls[remove_id] = ls[last_id-1]
+        ls[last_id-1] = None
+        return last_id-1
+
     def update(self):
         delta_time = glob.GAME_CLOCK.get_time() * 0.001;
 
