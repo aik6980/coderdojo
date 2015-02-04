@@ -13,6 +13,7 @@ class PhyParticleInstance:
     m_acc = Vector2(0, 0)
 
     m_fixed = False
+    m_active = True
 
     def __init__(self, x: float, y: float):
         self.m_pos = Vector2(x,y)
@@ -27,6 +28,8 @@ class PhyConstraint:
     m_Particle0 = None
     m_Particle1 = None
     m_Target = 0
+
+    m_active = True
 
     def __init__(self, a: PhyParticleInstance, b: PhyParticleInstance):
         self.m_Particle0 = a
@@ -60,18 +63,35 @@ class PhySimulation:
     def test_collision_instance(self, v: Vector2):
         threshold = 5
 
-        for i in range(0, self.m_ConstraintCounter):
-            p0 = self.m_ConstraintBuffer[i].m_Particle0
-            p1 = self.m_ConstraintBuffer[i].m_Particle1
-            if (p0.m_pos - v).length() < threshold:
-                self.m_ConstraintCounter = self.remove_instance(self.m_ConstraintBuffer, i, self.m_ConstraintCounter)
-            elif (p1.m_pos - v).length() < threshold:
-                self.m_ConstraintCounter = self.remove_instance(self.m_ConstraintBuffer, i, self.m_ConstraintCounter)
-
         for i in range(0, self.m_InstanceCounter):
             p = self.m_InstanceBuffer[i]
             if (p.m_pos - v).length() < threshold:
+                p.m_active = False
+
+        for i in range(0, self.m_ConstraintCounter):
+            c = self.m_ConstraintBuffer[i]
+            p0 = c.m_Particle0
+            p1 = c.m_Particle1
+            if (p0.m_pos - v).length() < threshold:
+                c.m_active = False
+            elif (p1.m_pos - v).length() < threshold:
+                c.m_active = False
+
+        i = 0
+        while i < self.m_ConstraintCounter:
+            c = self.m_ConstraintBuffer[i]
+            if not c.m_active:
+                self.m_ConstraintCounter = self.remove_instance(self.m_ConstraintBuffer, i, self.m_ConstraintCounter)
+            else:
+                i += 1
+
+        i = 0
+        while i < self.m_InstanceCounter:
+            p = self.m_InstanceBuffer[i]
+            if not p.m_active:
                 self.m_InstanceCounter = self.remove_instance(self.m_InstanceBuffer, i, self.m_InstanceCounter)
+            else:
+                i += 1
 
     @staticmethod
     def remove_instance(ls: list, remove_id: int, last_id: int):
@@ -84,9 +104,8 @@ class PhySimulation:
 
         step = delta_time/1
         for i in range(0, 1):
-
             for ii in range(0, self.m_InstanceCounter):
-                self.m_InstanceBuffer[ii].m_acc += Vector2(0, 20)
+                self.m_InstanceBuffer[ii].m_acc += Vector2(0, 4)
                 self.step_simulation_verlet(self.m_InstanceBuffer[ii], step)
 
             for ii in range(0, self.m_ConstraintCounter):
