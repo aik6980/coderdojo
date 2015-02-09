@@ -15,6 +15,7 @@ class BaseApp:
         glob.MAIN_SURFACE = pygame.display.set_mode(glob.SCREEN_SIZE)
 
         glob.GAME_CLOCK = pygame.time.Clock()
+        glob.GAME_CLOCK.tick()
 
         self.init()
 
@@ -28,7 +29,7 @@ class BaseApp:
             self.render()
 
             pygame.display.flip()
-            glob.GAME_CLOCK.tick(30)
+            glob.GAME_CLOCK.tick()
 
         self.destroy()
         pygame.quit()
