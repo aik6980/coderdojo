@@ -32,7 +32,9 @@ class App(BaseApp):
         if key_pressed[pygame.K_UP]:
             print("Key pressed")
 
-
+    def initPolygon(self):
+        pygame.a
+        pass
 
 if __name__ == "__main__":
     theApp = App()
