@@ -9,6 +9,29 @@ import py_global as glob
 import py_physics.py_physics_simulation as physics
 
 
+class Box:
+    m_pos = (0, 0, 0)
+    m_size = 8
+    m_color = (255, 255, 255)
+
+
+class Container:
+    m_size = 64
+
+
+class TreeNode:
+    m_pos = (0, 0, 0)
+    m_size = 8
+    m_children = [None]
+
+
+class BoxPacker:
+    m_root = TreeNode()
+
+    def __init__(self):
+        pass
+
+
 class App(BaseApp):
     def init(self):
         pass

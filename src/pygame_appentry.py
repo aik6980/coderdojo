@@ -6,17 +6,6 @@ from pygame.math import *
 
 import py_global as glob
 
-class Box:
-    m_pos   = (0, 0, 0)
-    m_size  = 8
-    m_color = (255, 255, 255)
-
-class BoxPackerNode:
-    pass
-
-class BoxPacker:
-    pass
-
 class BaseApp:
     m_active = True
 
