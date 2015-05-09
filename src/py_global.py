@@ -8,6 +8,7 @@ COLOR_RED = [255, 0, 0]
 SCREEN_SIZE = [640, 480]
 MAIN_SURFACE = None
 GAME_CLOCK = None
+GAME_TIME = 0.0
 
 #our game global
 PHYSIC_SIMULATION = None

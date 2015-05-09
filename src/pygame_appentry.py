@@ -30,7 +30,8 @@ class BaseApp:
             #print some debug info
 
             pygame.display.flip()
-            glob.GAME_CLOCK.tick()
+            glob.GAME_CLOCK.tick(30)
+            glob.GAME_TIME += glob.GAME_CLOCK.get_time()
 
         self.destroy()
         pygame.quit()
