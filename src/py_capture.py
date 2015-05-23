@@ -39,11 +39,14 @@ class VideoCapturePlayer(object):
         # if you don't want to tie the framerate to the camera, you can check and
         # see if the camera has an image ready.  note that while this works
         # on most cameras, some will never return true.
-        if 0 and self.camera.query_image():
+        #if 0 and self.camera.query_image():
             # capture an image
-            self.snapshot = self.camera.get_image(self.snapshot)
+            # self.snapshot = self.camera.get_image(self.snapshot)
         self.snapshot = self.camera.get_image(self.snapshot)
         #self.snapshot = self.camera.get_image()
+
+
+        #pygame.camera.colorspace(self.snapshot, "HSV", self.snapshot)
 
         # blit it to the display surface.  simple!
         self.display.blit(self.snapshot, (0, 0))
@@ -72,7 +75,9 @@ class VideoCapturePlayer(object):
                 elif e.type == KEYDOWN and e.key == K_o:
                     self.frame_n = -1
 
-            self.capture_to_files()
+                if e.type == USEREVENT+1:
+                    #print(self.frame_n)
+                    self.capture_to_files()
 
             self.get_and_flip()
             self.clock.tick()
@@ -81,6 +86,7 @@ class VideoCapturePlayer(object):
 
 def main():
     pygame.init()
+    pygame.time.set_timer(USEREVENT+1, 100)
     pygame.camera.init()
     VideoCapturePlayer().main()
     pygame.quit()

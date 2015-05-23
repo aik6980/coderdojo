@@ -25,8 +25,7 @@ Python files can be used as a movie source.
 
 """
 ffmpeg command
->ffmpeg -i H:\CodeDojo_Horsham\coderdojo\cache\%04d.jpg -target ntsc-vcd -q:v 0
--c:v mpeg1video -r 30 -pix_fmt yuv420p H:\CodeDojo_Horsham\coderdojo\res\out.mpg
+>ffmpeg -i H:\CodeDojo_Horsham\coderdojo\cache\%04d.jpg -target ntsc-vcd -q:v 0 -c:v mpeg1video -r 30 -pix_fmt yuv420p H:\CodeDojo_Horsham\coderdojo\res\out.mpg
 """
 
 def main(filepath):
@@ -47,13 +46,19 @@ def main(filepath):
 
     pygame.event.set_allowed((QUIT, KEYDOWN))
     pygame.time.set_timer(USEREVENT, 1000)
+
     movie.play()
-    while movie.get_busy():
+    while 1:
         evt = pygame.event.wait()
         if evt.type == QUIT:
             break
         if evt.type == KEYDOWN and evt.unicode == QUIT_CHAR:
             break
+
+        if movie.get_busy()==False:
+            movie.rewind()
+            movie.play()
+
     if movie.get_busy():
         movie.stop()
     pygame.time.set_timer(USEREVENT, 0)
