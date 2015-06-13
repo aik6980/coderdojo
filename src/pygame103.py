@@ -11,6 +11,9 @@ from pygame_appentry import *
 import py_global as glob
 import py_physics.py_physics_simulation as physics
 
+class Triangle:
+    pass
+
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 
 def load_image(file):
@@ -32,6 +35,7 @@ class Actor(pygame.sprite.Sprite):
 
     def initialize(self):
         self.image = self.images[0]
+        self.image = pygame.transform.scale(self.image, [200, 200])
         self.rect = self.image.get_rect()
 
     def update(self):
